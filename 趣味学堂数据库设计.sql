@@ -26,7 +26,8 @@
 --
 
 -- if not exist database app_intesch;
-create database app_intesch;
+-- create database app_intesch;
+use app_intesch;
 
 ------------------------------------------------------------------------------------
 -- 与学生相关的表
