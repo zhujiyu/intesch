@@ -28,7 +28,7 @@
 -- if not exist database app_intesch;
 create database app_intesch;
 
-----------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 -- 与学生相关的表
 -- 表1：学生信息 动态表
 create table students(
@@ -37,13 +37,11 @@ create table students(
 	exp_value int,   -- EXP|empirical value|empiric value 经验值，私有
 	prop_num  int,   -- 道具数量，私有
 	certi_num int,   -- 奖状数，公开
-	lower_gem  int,  -- 低级宝物数量，公开，宝物是分级的，这里分三级宝物，可以用独立宝物表来存储宝物数量，更易于扩展，但会增加计算量
+	lower_gem  int,  -- 低级宝物数量，公开，宝物是分级的，这里分三级宝物，
+	                 -- 可以用独立宝物表来存储宝物数量，更易于扩展，但会增加计算量
 	middle_gem int,  -- 中极宝物，公开
 	high_gem   int,  -- 高极宝物，公开
-	primary key(ID),
---	index key (exp_value),
---	index (high_gem, middle_gem, lower_gem),
---	index (certi_num)
+	primary key(ID)
 );
 
 create index exp_index on students(exp_value);
@@ -58,7 +56,8 @@ create table student_sign (
 	loadin int,      -- 进入时间
 	loadout int,     -- 退出时间
 	ipaddress varchar(255),
-	source_type varchar(255), -- 记录来源，客户端、移动端、浏览器，尽量详细，客户端尽量带版本号，浏览器尽量带版本和版本号
+	source_type varchar(255), -- 记录来源，客户端、移动端、浏览器，尽量详细，
+	                          -- 客户端尽量带版本号，浏览器尽量带版本和版本号
 	primary key(ID),
 );
 
@@ -70,7 +69,7 @@ create table tasks(
 	primary key(ID)
 );
 
-----------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- 与地图相关的表
 -- 表3：地图 这是趣味学堂的配置表， 系统初始表
 create table maps (
@@ -93,7 +92,7 @@ create table map_contents (
 	primary key(ID)
 );
 
-create index map_checkpoint_index on map_contents (cp_id);
+create index map_checkpoint_index on map_contents (map_id);
 
 -- 表5：学生探索地图记录 动态表
 create table student_maps (
@@ -121,13 +120,14 @@ create table checkpoints(
 create table student_checkpoints(
 	ID int,
 	student_id int,  -- 学生ID
-	map_id int,      -- 数据冗余，实际上根据cp_id，即可找到map_id，因为一个关卡应该只出现在一个地图中
+	map_id int,      -- 数据冗余，实际上根据cp_id，即可找到map_id，
+	                 -- 因为一个关卡应该只出现在一个地图中
 	cp_id int,       -- 关卡ID
 	ratio int,
 	primary key(ID)
 );
 
-create index student_checkpoint_index on student_checkpoints(student_id, cp_id);
+create index student_checkpoint_index on student_checkpoints(student_id, map_id);
 
 -- 表8：关卡内容  系统初始表
 create table cp_contents(
@@ -152,7 +152,7 @@ create table student_contents(
 	primary key(ID)
 );
 
---------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 -- 物品体系
 -- 表10：道具 配置表
 create table props(
@@ -231,7 +231,7 @@ create table certi_mails(
 
 create index mail_certi_index on certi_mails(student_id);
 
---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
 -- 表17：虚拟币余额  动态表
 create table student_coins(
 	ID int,
