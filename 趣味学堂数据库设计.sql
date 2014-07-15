@@ -49,11 +49,22 @@ create index exp_index on students(exp_value);
 create index gem_index on students(high_gem, middle_gem, lower_gem);
 create index certi_index on students(certi_num);
 
--- 表2：登录签到 动态表
-create table student_sign (
+-- 表2：签到 动态表
+create table student_signs (
 	ID int,
 	student_id int,  -- 学生ID
+	sign_date int,   -- 签到日期，这里int型表示
 	signin bit,      -- 是否签到，学生进入趣味学堂，需要手动签到
+	primary key(ID),
+);
+
+create index sign_index on student_signs(student_id);
+
+-- 表3：登录 动态表
+--      此表与趣味学堂的功能并无影响，但是对分析用户活跃度，出错时排错等很有用
+create table student_logins (
+	ID int,
+	student_id int,  -- 学生ID
 	loadin int,      -- 进入时间
 	loadout int,     -- 退出时间
 	ipaddress varchar(255),
@@ -61,6 +72,8 @@ create table student_sign (
 	                          -- 客户端尽量带版本号，浏览器尽量带版本和版本号
 	primary key(ID),
 );
+
+create index login_index on student_logins(student_id);
 
 -- 任务   这个在服务器可以不存在，客户端自己制作
 create table tasks(
