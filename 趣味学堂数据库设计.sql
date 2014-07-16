@@ -29,27 +29,34 @@
 -- create database app_intesch;
 use app_intesch;
 
-------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
 -- 与学生相关的表
 -- 表1：学生信息 动态表
+if exists(select * from sysobjects where name = 'students')
+drop table students;
+
 create table students(
 	ID int,
 	signin int,      -- 已连续签到天数
 	exp_value int,   -- EXP|empirical value|empiric value 经验值，私有
 	prop_num  int,   -- 道具数量，私有
-	certi_num int,   -- 奖状数，公开
-	lower_gem  int,  -- 低级宝物数量，公开，宝物是分级的，这里分三级宝物，
+	treasure_frag int default 0, -- 藏宝图碎片数
+	certi_num  int default 0,  -- 奖状数，公开
+	lower_gem  int default 0,  -- 低级宝物数量，公开，宝物是分级的，这里分三级宝物，
 	                 -- 可以用独立宝物表来存储宝物数量，更易于扩展，但会增加计算量
-	middle_gem int,  -- 中极宝物，公开
-	high_gem   int,  -- 高极宝物，公开
+	middle_gem int default 0,  -- 中极宝物，公开
+	high_gem   int default 0,  -- 高极宝物，公开
 	primary key(ID)
-);
+)
 
 create index exp_index on students(exp_value);
 create index gem_index on students(high_gem, middle_gem, lower_gem);
 create index certi_index on students(certi_num);
 
 -- 表2：签到 动态表
+if exists(select * from sysobjects where name = 'student_signs')
+drop table student_signs;
+
 create table student_signs (
 	ID int,
 	student_id int,  -- 学生ID
@@ -61,7 +68,10 @@ create table student_signs (
 create index sign_index on student_signs(student_id);
 
 -- 表3：登录 动态表
---      此表与趣味学堂的功能并无影响，但是对分析用户活跃度，出错时排错等很有用
+--      此表用于判定学生当前是否在线，另外对分析用户活跃度，出错时排错等很有用
+if exists(select * from sysobjects where name = 'student_logins')
+drop table student_logins;
+
 create table student_logins (
 	ID int,
 	student_id int,  -- 学生ID
@@ -75,17 +85,12 @@ create table student_logins (
 
 create index login_index on student_logins(student_id);
 
--- 任务   这个在服务器可以不存在，客户端自己制作
-create table tasks(
-	ID int,
-	serial int,     -- 任务的序列号
-	content varchar(2560), -- 指示的某个操作，
-	primary key(ID)
-);
-
 --------------------------------------------------------------------------------
 -- 与地图相关的表
--- 表3：地图 这是趣味学堂的配置表， 系统初始表
+-- 表4：地图 这是趣味学堂的配置表， 系统初始表
+if exists(select * from sysobjects where name = 'maps')
+drop table maps;
+
 create table maps (
 	ID int,
 	name varchar(255),
@@ -97,23 +102,27 @@ create table maps (
 	primary key(ID)
 );
 
--- 表4：地图内容  系统初始表
-create table map_contents (
-	ID int,
-	map_id int,
-	cp_id  int,
-	serial int, -- 序号，各关卡在地图中的排序
-	primary key(ID)
-);
+---- 表5：地图内容  系统初始表
+--create table map_contents (
+--	ID int,
+--	map_id int,
+--	cp_id  int,
+--	serial int, -- 序号，各关卡在地图中的排序
+--	primary key(ID)
+--);
 
-create index map_checkpoint_index on map_contents (map_id);
+--create index map_checkpoint_index on map_contents (map_id);
 
 -- 表5：学生探索地图记录 动态表
+if exists(select * from sysobjects where name = 'student_maps')
+drop table student_maps;
+
 create table student_maps (
 	ID int,
 	student_id int,  -- 学生ID
 	map_id int,
 	checkpoints int, -- 已经通过的关卡数
+	reward bit default 0,   -- 宝屋是否打开，各关卡通关后，可以打开宝屋，状态不可逆
 	last_complete datetime, -- 最后通关时间
 	primary key(ID)
 );
@@ -122,53 +131,174 @@ create index student_index on student_maps(student_id);
 create index map_index on student_maps(map_id);
 
 -- 表6：关卡 系统初始表
+--      一个关卡应该只在一个地图中，所在地图可以算成关卡的一个属性
+--      所以无需专门的地图和关卡的对应表，
+if exists(select * from sysobjects where name = 'checkpoints')
+drop table checkpoints;
+
 create table checkpoints(
 	ID int,
-	name varchar(255),
+	map_id int, -- 所在地图
+	serial int, -- 序号，各关卡在地图中的排序
+	unit   int, -- 对应教材的单元数
+	name   varchar(255),
 	remark varchar(255),
-	unit int,  -- 对应教材的单元数
 	primary key(ID)
 );
 
+create index checkpoint_map_index on checkpoints (map_id, serial);
+
 -- 表7：学生关卡  动态表
+if exists(select * from sysobjects where name = 'student_checkpoints')
+drop table student_checkpoints;
+
 create table student_checkpoints(
 	ID int,
 	student_id int,  -- 学生ID
 	map_id int,      -- 数据冗余，实际上根据cp_id，即可找到map_id，
 	                 -- 因为一个关卡应该只出现在一个地图中
 	cp_id int,       -- 关卡ID
-	ratio int,
+	right_num int,   -- 答对的题目数
+	score int,       -- 一个关卡实际上相当于一份试卷，根据各题目的分值计算总分
+	pass bit default 0,      -- 是否通关，通关是不可逆过程，防止学生作弊，奖励不会重复发放
+	                         -- 即学生通过一关后，即使把已做的题目重新做错，
+	                         -- 答对题目数和得分会相应修改，但通关状态不会变
+	                         -- 通关后即发放奖励，包括银币和宝图碎片
+--	silver bit default 0,    -- 银币奖励是否发给学生
+--	treasure bit default 0,  -- 宝图碎片是否发给学生
+--	                         -- 奖励和宝图碎片每个单元只能发一次，为防止学生作弊，必须记录结果
+--	                         -- 否则，学生可以通过新把题目都做对，然后再做错几道，
+--	                         -- 然后再重新做对，再次触发关卡通关事件
 	primary key(ID)
 );
 
-create index student_checkpoint_index on student_checkpoints(student_id, map_id);
+create index student_map_index on student_checkpoints(student_id, map_id);
+create index student_checkpoint_index on student_checkpoints(student_id, cp_id);
 
 -- 表8：关卡内容  系统初始表
+if exists(select * from sysobjects where name = 'cp_contents')
+drop table cp_contents;
+
 create table cp_contents(
 	ID int,
 	checkpoint_id int,  -- 关卡ID
-	content_id int,     -- 题库中题目的ID，由这个ID，应该可以从题库中提取出题目内容
 	serial int,         -- 题目在关卡中排序
+	problem_id int,     -- 题库中题目的ID，由这个ID，应该可以从题库中提取出题目内容
+	exp_value int,
+	silver int,
 	primary key(ID)
 );
 
 create index checkpoint_index on cp_contents(checkpoint_id, serial);
 
--- 表9：学生题目  动态表
-create table student_contents(
+-- 表9：习题回答  动态表
+if exists(select * from sysobjects where name = 'content_replies')
+drop table content_replies;
+
+create table content_replies(
 	ID int,
 	student_id int,    -- 学生ID
 	checkpoint_id int, -- 关卡ID
-	content_id int,    -- 此处是cp_contents表的ID，用它可以查到题库中题目的ID
-	answer varchar(255),  -- 问题答案
+	content_id int,    -- 此处是cp_contents表的ID，用它可以查到题库中题目的ID，
+	                   -- 由于其唯一性，由此也可读出对应关卡ID和地图ID，
+	                   -- 这里出于计算方便，加入了冗余字段checkpoint_id
+	answer varchar(255), -- 问题答案
 	score int, 
+	exp_value int,     -- 该字段记录学生本次做对题目获得的经验值，
+	                   -- 一条新记录产生时，该值等于cp_contents表中exp_value字段的值
+	                   -- 之后每次答案修改为正确值，该字段的值会减小一半
+	silver int,        -- 使用方法同exp_value字段
 	comp_time datetime, 
 	primary key(ID)
 );
 
-------------------------------------------------------------------------------------
+create index reply_index on content_replies(student_id, checkpoint_id, content_id);
+
+----------------------------------------------------------------------------------
 -- 物品体系
--- 表10：道具 配置表
+-- 表10：宝物 配置表
+if exists(select * from sysobjects where name = 'gems')
+drop table gems;
+
+create table gems(
+	ID int,
+	name   varchar(255),
+	photo  varchar(255),
+	remark varchar(255),
+	gem_rank int, 
+	primary key(ID)
+);
+
+create index gem_name_index on gems(name);
+
+-- 表11：领取宝物记录 动态表
+if exists(select * from sysobjects where name = 'gem_rewards')
+drop table gem_rewards;
+
+create table gem_rewards(
+	ID int,
+	student_id int,
+	gem_id int,
+--	reason varchar(255), -- 获得原因，描述一下学生是怎么获得的，完成哪些任务
+	get_time datetime,
+	primary key(ID)
+);
+
+create index reward_gem_index on gem_rewards(student_id);
+
+-- 表12：奖状 配置表
+if exists(select * from sysobjects where name = 'certis')
+drop table certis;
+
+create table certis(
+	ID int,
+	name   varchar(255),
+	photo  varchar(255),
+	remark varchar(255),
+	primary key(ID)
+);
+
+create index certi_name_index on certis(name);
+
+-- 表13：学生获取奖状记录 动态表
+if exists(select * from sysobjects where name = 'certi_rewards')
+drop table certi_rewards;
+
+create table certi_rewards(
+	ID int,
+	student_id int,
+	certi_id int,
+	reason  varchar(255),  -- 获得原因，描述一下学生是怎么获得的，
+	                       -- 等级提升哪级，或者完成了什么任务
+	applied bit default 0, -- 是否申请邮寄
+	get_time     datetime default 0, -- 获得奖励的时间，这个时间该条记录一产生就有值
+    mail_time    datetime default 0, -- 发出奖状的时间，
+                                     -- 公司服务人员发出奖状后，这个字段才有值
+    receive_time datetime default 0, -- 确认收到的时间，学生确认收到，这个字段才有值
+	primary key(ID)
+);
+
+create index reward_certi_index on certi_rewards(student_id, certi_id);
+
+---- 表14：邮寄奖状记录  动态表
+--if exists(select * from sysobjects where name = 'certi_mails')
+--drop table certi_mails;
+
+--create table certi_mails(
+--	ID int,
+--	student_id int,
+--	reward_id  int,   -- certi_reward表的ID
+	
+--    mail_time  datetime,
+--	primary key(ID)
+--);
+
+--create index mail_certi_index on certi_mails(student_id, reward_id);
+
+-- 表15：道具 配置表
+if exists(select * from sysobjects where name = 'props')
+drop table props;
+
 create table props(
 	ID int,
 	name varchar(255),
@@ -178,7 +308,10 @@ create table props(
 	primary key(ID)
 );
 
--- 表11：道具账单  获取和使用道具的记录 购买记录在银币账单里同时出现 动态表
+-- 表16：道具账单  获取和使用道具的记录 购买记录在银币账单里同时出现 动态表
+if exists(select * from sysobjects where name = 'prop_billes')
+drop table prop_billes;
+
 create table prop_billes(
 	ID int,
 	student_id int,
@@ -189,61 +322,6 @@ create table prop_billes(
 );
 
 create index use_prop_index on prop_billes(student_id);
-
--- 表12：宝物 配置表
-create table gems(
-	ID int,
-	name   varchar(255),
-	photo  varchar(255),
-	remark varchar(255),
-	gem_rank int, 
-	primary key(ID)
-);
-
--- 表13：领取宝物记录 动态表
-create table gem_records(
-	ID int,
-	student_id int,
-	gem_id int,
-	reason varchar(255), -- 获得原因，描述一下学生是怎么获得的，完成哪些任务
-	get_time datetime,
-	primary key(ID)
-);
-
-create index get_gem_index on gem_records(student_id);
-
--- 表14：奖状 配置表
-create table certis(
-	ID int,
-	name varchar(255),
-	photo varchar(255),
-	remark varchar(255),
-	primary key(ID)
-);
-
--- 表15：学生获取奖状记录 动态表
-create table certi_gets(
-	ID int,
-	student_id int,
-	certi_id int,
-	reason  varchar(255), -- 获得原因，描述一下学生是怎么获得的，等级提升哪级，或者完成了什么任务
-	get_time datetime,
-	primary key(ID)
-);
-
-create index get_certi_index on certi_gets(student_id);
-
--- 表16：邮寄奖状记录  动态表
-create table certi_mails(
-	ID int,
-	student_id int,
-	certi_id int,
-	reason  varchar(255), -- 获得原因，描述一下学生是怎么获得的，等级提升哪级，或者完成了什么任务
-    mail_time datetime,
-	primary key(ID)
-);
-
-create index mail_certi_index on certi_mails(student_id);
 
 ---------------------------------------------------------------------------------------
 -- 表17：虚拟币余额  动态表
