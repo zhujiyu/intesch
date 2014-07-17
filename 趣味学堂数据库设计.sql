@@ -9,20 +9,24 @@
 --     任务：任务是引导学生如何使用趣味学堂的一组数据，充当使用教程的任务
 --           这个可以不体现在数据库，客户端自己去实现就行了
 --
---     地图：地图和年级科目对应，每一个年级的每一学期的每一科目，应该都有一个地图
+--     地图：地图和年级科目对应，每一个年级的每一学期的每一科目对应一张地图
 --     关卡：每个单元对应一个关卡
---     题目：题目是趣味学堂的核心，题目的具体信息，应该到题库去获取，但是此处需要一张，关卡和题目的对应表
+--     题目：题目是趣味学堂的核心，题目的具体信息，应该到题库去获取，
+--           但是此处需要一张，关卡和题目的对应表
 --
 --     藏宝图碎片：藏宝图是和前面的关卡地图是不同的概念，藏宝图是用来寻找宝物的，
 --                 需要一张记录学生何时获得了何种藏宝图碎片的记录
---     宝物：各种宝物的数据是作为配置存在的，需要一张表记录，重点需要一张表记录学生何时获得了何种宝物
---     宝屋：学生打通一张地图后，可以打开神秘宝屋，它没有数据，只是给学生获得神秘高级宝物机会的一个形象表示，
+--     宝物：各种宝物的数据是作为配置存在的，需要一张表记录，
+--           重点需要一张表记录学生何时获得了何种宝物
+--     宝屋：学生打通一张地图后，可以打开神秘宝屋，它没有数据，
+--           只是给学生获得神秘高级宝物机会的一个形象表示，
 --           对开发者不是一个实在的对象
 --     奖状：学生经验值增加提升等级后，或者打通关卡后，可以领取奖状，需要记录奖状信息，
 --           学生获得记录，学生申请邮寄记录
 --
---     乐币：虚拟币，余额记录在学生虚拟币表里，而不放在学生信息表里，因为两者的安全级别不同
---     银币：虚拟币，余额记录在学生虚拟币表里，另需要获得和消费情况
+--     乐币：虚拟币，余额记录在学生虚拟币表里，而不放在学生信息表里，
+--           因为两者的安全级别不同，另外需要记录充值和消费情况的账单
+--     银币：虚拟币，余额记录在学生虚拟币表里，另需要记录获得和消费情况的账单
 --
 
 -- if not exist database app_intesch;
@@ -36,14 +40,14 @@ if exists(select * from sysobjects where name = 'students')
 drop table students;
 
 create table students(
-	ID int,
+	ID int,          -- 学生的编号
 	signin int,      -- 已连续签到天数
 	exp_value int,   -- EXP|empirical value|empiric value 经验值，私有
 	prop_num  int,   -- 道具数量，私有
 	treasure_frag int default 0, -- 藏宝图碎片数
 	certi_num  int default 0,  -- 奖状数，公开
 	lower_gem  int default 0,  -- 低级宝物数量，公开，宝物是分级的，这里分三级宝物，
-	                 -- 可以用独立宝物表来存储宝物数量，更易于扩展，但会增加计算量
+	                           -- 可以用独立宝物表来存储宝物数量，更易于扩展，但会增加计算量
 	middle_gem int default 0,  -- 中极宝物，公开
 	high_gem   int default 0,  -- 高极宝物，公开
 	primary key(ID)
@@ -53,12 +57,40 @@ create index exp_index on students(exp_value);
 create index gem_index on students(high_gem, middle_gem, lower_gem);
 create index certi_index on students(certi_num);
 
+--- 这种方式还需要考虑
+--if exists(select * from sysobjects where name = 'attributes')
+--drop table attributes;
+
+--create table attributes(
+--	ID int,
+--	name varchar(255),
+--	attr_type int,  -- 属性类型编号，
+--	min_value int, -- 属性值
+--	max_value int, -- 属性值
+--	primary key(ID)
+--);
+
+--if exists(select * from sysobjects where name = 'student_attrs')
+--drop table student_attrs;
+
+--create table student_attrs(
+--	ID int identity(1000000, 1),
+--	student_id int, 
+--	attr_numb int,  -- 属性编号
+--	attr_type int,  -- 属性类型编号，
+--	attr_value int, -- 属性值
+--	primary key(ID)
+--);
+
+--create index student_index on student_attrs (student_id);
+--create index student_attr_index on student_attrs (attr_numb, attr_value);
+
 -- 表2：签到 动态表
 if exists(select * from sysobjects where name = 'student_signs')
 drop table student_signs;
 
 create table student_signs (
-	ID int,
+	ID int identity(1000000, 1),
 	student_id int,  -- 学生ID
 	sign_date int,   -- 签到日期，这里int型表示
 	signin bit,      -- 是否签到，学生进入趣味学堂，需要手动签到
@@ -73,7 +105,7 @@ if exists(select * from sysobjects where name = 'student_logins')
 drop table student_logins;
 
 create table student_logins (
-	ID int,
+	ID int identity(1000000, 1),
 	student_id int,  -- 学生ID
 	loadin int,      -- 进入时间
 	loadout int,     -- 退出时间
@@ -92,7 +124,7 @@ if exists(select * from sysobjects where name = 'maps')
 drop table maps;
 
 create table maps (
-	ID int,
+	ID int identity(1000000, 1),
 	name varchar(255),
 	descep varchar(1024),
 	_subject varchar(255), -- 对应科目
@@ -118,7 +150,7 @@ if exists(select * from sysobjects where name = 'student_maps')
 drop table student_maps;
 
 create table student_maps (
-	ID int,
+	ID int identity(1000000, 1),
 	student_id int,  -- 学生ID
 	map_id int,
 	checkpoints int, -- 已经通过的关卡数
@@ -137,7 +169,7 @@ if exists(select * from sysobjects where name = 'checkpoints')
 drop table checkpoints;
 
 create table checkpoints(
-	ID int,
+	ID int identity(1000000, 1),
 	map_id int, -- 所在地图
 	serial int, -- 序号，各关卡在地图中的排序
 	unit   int, -- 对应教材的单元数
@@ -153,7 +185,7 @@ if exists(select * from sysobjects where name = 'student_checkpoints')
 drop table student_checkpoints;
 
 create table student_checkpoints(
-	ID int,
+	ID int identity(1000000, 1),
 	student_id int,  -- 学生ID
 	map_id int,      -- 数据冗余，实际上根据cp_id，即可找到map_id，
 	                 -- 因为一个关卡应该只出现在一个地图中
@@ -180,7 +212,7 @@ if exists(select * from sysobjects where name = 'cp_contents')
 drop table cp_contents;
 
 create table cp_contents(
-	ID int,
+	ID int identity(1000000, 1),
 	checkpoint_id int,  -- 关卡ID
 	serial int,         -- 题目在关卡中排序
 	problem_id int,     -- 题库中题目的ID，由这个ID，应该可以从题库中提取出题目内容
@@ -189,19 +221,21 @@ create table cp_contents(
 	primary key(ID)
 );
 
-create index checkpoint_index on cp_contents(checkpoint_id, serial);
+create index checkpoint_content_index on cp_contents (problem_id);
+create index checkpoint_serial_index on cp_contents (checkpoint_id, serial);
 
 -- 表9：习题回答  动态表
 if exists(select * from sysobjects where name = 'content_replies')
 drop table content_replies;
 
 create table content_replies(
-	ID int,
+	ID int identity(1000000, 1),
 	student_id int,    -- 学生ID
 	checkpoint_id int, -- 关卡ID
-	content_id int,    -- 此处是cp_contents表的ID，用它可以查到题库中题目的ID，
-	                   -- 由于其唯一性，由此也可读出对应关卡ID和地图ID，
-	                   -- 这里出于计算方便，加入了冗余字段checkpoint_id
+	problem_id int,    -- 题库中题目的ID，由这个ID，应该可以从题库中提取出题目内容
+	--content_id int,    -- 此处是cp_contents表的ID，用它可以查到题库中题目的ID，
+	--                   -- 由于其唯一性，由此也可读出对应关卡ID和地图ID，
+	--                   -- 这里出于计算方便，加入了冗余字段checkpoint_id
 	answer varchar(255), -- 问题答案
 	score int, 
 	exp_value int,     -- 该字段记录学生本次做对题目获得的经验值，
@@ -212,7 +246,7 @@ create table content_replies(
 	primary key(ID)
 );
 
-create index reply_index on content_replies(student_id, checkpoint_id, content_id);
+create index reply_index on content_replies(student_id, checkpoint_id, problem_id);
 
 ----------------------------------------------------------------------------------
 -- 物品体系
@@ -221,7 +255,7 @@ if exists(select * from sysobjects where name = 'gems')
 drop table gems;
 
 create table gems(
-	ID int,
+	ID int identity(1000000, 1),
 	name   varchar(255),
 	photo  varchar(255),
 	remark varchar(255),
@@ -236,7 +270,7 @@ if exists(select * from sysobjects where name = 'gem_rewards')
 drop table gem_rewards;
 
 create table gem_rewards(
-	ID int,
+	ID int identity(1000000, 1),
 	student_id int,
 	gem_id int,
 --	reason varchar(255), -- 获得原因，描述一下学生是怎么获得的，完成哪些任务
@@ -251,7 +285,7 @@ if exists(select * from sysobjects where name = 'certis')
 drop table certis;
 
 create table certis(
-	ID int,
+	ID int identity(1000000, 1),
 	name   varchar(255),
 	photo  varchar(255),
 	remark varchar(255),
@@ -265,7 +299,7 @@ if exists(select * from sysobjects where name = 'certi_rewards')
 drop table certi_rewards;
 
 create table certi_rewards(
-	ID int,
+	ID int identity(1000000, 1),
 	student_id int,
 	certi_id int,
 	reason  varchar(255),  -- 获得原因，描述一下学生是怎么获得的，
@@ -295,25 +329,25 @@ create index reward_certi_index on certi_rewards(student_id, certi_id);
 
 --create index mail_certi_index on certi_mails(student_id, reward_id);
 
--- 表15：道具 配置表
+-- 表14：道具 配置表
 if exists(select * from sysobjects where name = 'props')
 drop table props;
 
 create table props(
-	ID int,
-	name varchar(255),
-	photo varchar(255),
+	ID int identity(1000000, 1),
+	name   varchar(255),
+	photo  varchar(255),
 	remark varchar(255),
 	prices int, 
 	primary key(ID)
 );
 
--- 表16：道具账单  获取和使用道具的记录 购买记录在银币账单里同时出现 动态表
+-- 表15：道具账单  获取和使用道具的记录 购买记录在银币账单里同时出现 动态表
 if exists(select * from sysobjects where name = 'prop_billes')
 drop table prop_billes;
 
 create table prop_billes(
-	ID int,
+	ID int identity(1000000, 1),
 	student_id int,
 	prop_id int,
 	number int,  -- 负数表示使用掉，正数表示获取，可能是系统赠送，也可能是购买
@@ -324,18 +358,26 @@ create table prop_billes(
 create index use_prop_index on prop_billes(student_id);
 
 ---------------------------------------------------------------------------------------
--- 表17：虚拟币余额  动态表
-create table student_coins(
-	ID int,
+-- 表16：虚拟币余额  动态表
+if exists(select * from sysobjects where name = 'virtual_coins')
+drop table virtual_coins;
+
+create table virtual_coins(
+	ID int identity(1000000, 1),
 	student_id int,    -- 学生ID
 	iscoin int default 0, 
 	svcoin int default 0, 
 	primary key(ID)
 );
 
--- 表18：乐币账单  动态表
+create index virtual_coin_index on virtual_coins (student_id);
+
+-- 表17：乐币账单  动态表
+if exists(select * from sysobjects where name = 'iscoin_billes')
+drop table iscoin_billes;
+
 create table iscoin_billes(
-	ID int,
+	ID int identity(1000000, 1),
 	student_id int, -- 学生ID
 	iscoin int,     -- 正数表示收入，负数表示输出
 	good_id int,    -- 购买的商品ID，
@@ -345,9 +387,14 @@ create table iscoin_billes(
 	primary key(ID)
 );
 
--- 表19：银币账单  动态表
-create table silber_billes(
-	ID int,
+create index iscoin_bill_index on iscoin_billes (student_id);
+
+-- 表18：银币账单  动态表
+if exists(select * from sysobjects where name = 'silver_billes')
+drop table silver_billes;
+
+create table silver_billes(
+	ID int identity(1000000, 1),
 	student_id int, -- 学生ID
 	svcoin int,     -- 正数表示收入，负数表示输出
 	good_id int,    -- 购买的商品ID，
@@ -357,21 +404,23 @@ create table silber_billes(
 	primary key(ID)
 );
 
--- 表20：充值记录  动态表
-create table rechanges(
-	ID int,
-	student_id int,    -- 学生ID
-	iscoin int, 
-	op_time datetime,
-	primary key(ID)
-);
+create index silver_bill_index on silver_billes (student_id);
 
--- 表21：兑换记录  动态表
-create table exchanges(
-	ID int,
-	student_id int,    -- 学生ID
-	silvercoin int, 
-	op_time datetime,
-	primary key(ID)
-);
+---- 表20：充值记录  动态表
+--create table rechanges(
+--	ID int,
+--	student_id int,    -- 学生ID
+--	iscoin int, 
+--	op_time datetime,
+--	primary key(ID)
+--);
+
+---- 表21：兑换记录  动态表
+--create table exchanges(
+--	ID int,
+--	student_id int,    -- 学生ID
+--	silvercoin int, 
+--	op_time datetime,
+--	primary key(ID)
+--);
 
