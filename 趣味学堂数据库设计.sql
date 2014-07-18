@@ -40,7 +40,7 @@ if exists(select * from sysobjects where name = 'students')
 drop table students;
 
 create table students(
-	ID int identity(1000000, 1),
+	ID int,          -- 学生编号
 	signin int,      -- 已连续签到天数
 	exp_value int,   -- EXP|empirical value|empiric value 经验值，私有
 	max_constant_rights int default 0, -- 历史最大连对数
@@ -83,7 +83,7 @@ create table student_logins (
 	ID int identity(1000000, 1),
 	student_id int,  -- 学生ID
 	loadin int,      -- 进入时间
-	loadout int,     -- 退出时间
+	loadout int,     -- 退出时间，利用该字段，可以粗略估计用户在线状态
 	ipaddress   varchar(255),
 	source_type varchar(255), -- 记录来源，客户端、移动端、浏览器，尽量详细，
 	                          -- 客户端尽量带版本号，浏览器尽量带版本和版本号
@@ -137,10 +137,10 @@ create table student_maps (
 	primary key(ID)
 );
 
-create index map_student_index on student_maps(student_id);
-create index map_index on student_maps(map_id);
-create index map_constant_right_index on student_maps (max_constant_rights);
-create index map_total_right_index on student_maps (total_rights);
+create index map_student_index on student_maps(student_id, map_id); -- 获取一个学生在某个地图的信息
+create index map_constant_right_index on student_maps (map_id, max_constant_rights); -- 最高连对排行
+create index map_total_right_index on student_maps (map_id, total_rights);           -- 累计做对题目排行
+--create index map_index on student_maps(map_id);
 --create index map_complete_index on student_maps (last_complete);
 
 -- 表6：关卡 系统初始表
@@ -244,9 +244,24 @@ create table constant_right_log(
 
 create index constant_right_index on constant_right_log (student_id, map_id);
 
+-- 表11：连对log  动态表
+if exists(select * from sysobjects where name = 'card_log')
+drop table card_log;
+
+create table card_log(
+	ID int identity(1000000, 1),
+	student_id int, -- 学生ID
+	map_id int,     -- 地图ID
+	card_id int,    -- 使用道具卡的编号
+	log_time datetime, 
+	primary key(ID)
+);
+
+create index card_log_index on card_log (student_id, map_id, card_id);
+
 ----------------------------------------------------------------------------------
 -- 物品体系
--- 表11：宝物 配置表
+-- 表12：宝物 配置表
 if exists(select * from sysobjects where name = 'gems')
 drop table gems;
 
@@ -261,7 +276,7 @@ create table gems(
 
 create index gem_name_index on gems(name);
 
--- 表12：领取宝物记录 动态表
+-- 表13：领取宝物记录 动态表
 if exists(select * from sysobjects where name = 'gem_rewards')
 drop table gem_rewards;
 
@@ -276,7 +291,7 @@ create table gem_rewards(
 
 create index reward_gem_index on gem_rewards(student_id);
 
--- 表13：奖状 配置表
+-- 表14：奖状 配置表
 if exists(select * from sysobjects where name = 'certis')
 drop table certis;
 
@@ -290,7 +305,7 @@ create table certis(
 
 create index certi_name_index on certis(name);
 
--- 表14：学生获取奖状记录 动态表
+-- 表15：学生获取奖状记录 动态表
 if exists(select * from sysobjects where name = 'certi_rewards')
 drop table certi_rewards;
 
@@ -325,7 +340,7 @@ create index reward_certi_index on certi_rewards(student_id, certi_id);
 
 --create index mail_certi_index on certi_mails(student_id, reward_id);
 
--- 表15：道具 配置表
+-- 表16：道具 配置表
 if exists(select * from sysobjects where name = 'props')
 drop table props;
 
@@ -338,7 +353,7 @@ create table props(
 	primary key(ID)
 );
 
--- 表16：道具账单  获取和使用道具的记录 购买记录在银币账单里同时出现 动态表
+-- 表17：道具账单  获取和使用道具的记录 购买记录在银币账单里同时出现 动态表
 if exists(select * from sysobjects where name = 'prop_billes')
 drop table prop_billes;
 
@@ -354,7 +369,7 @@ create table prop_billes(
 create index use_prop_index on prop_billes(student_id);
 
 ---------------------------------------------------------------------------------------
--- 表17：虚拟币余额  动态表
+-- 表18：虚拟币余额  动态表
 if exists(select * from sysobjects where name = 'virtual_coins')
 drop table virtual_coins;
 
@@ -368,7 +383,7 @@ create table virtual_coins(
 
 create index virtual_coin_index on virtual_coins (student_id);
 
--- 表18：乐币账单  动态表
+-- 表19：乐币账单  动态表
 if exists(select * from sysobjects where name = 'iscoin_billes')
 drop table iscoin_billes;
 
@@ -385,7 +400,7 @@ create table iscoin_billes(
 
 create index iscoin_bill_index on iscoin_billes (student_id);
 
--- 表19：银币账单  动态表
+-- 表20：银币账单  动态表
 if exists(select * from sysobjects where name = 'silver_billes')
 drop table silver_billes;
 
