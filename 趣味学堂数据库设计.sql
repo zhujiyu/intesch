@@ -1,4 +1,4 @@
-﻿-- 趣味学堂数据库
+﻿-- 趣味学堂数据库脚本
 -- 乐教乐学 研发部 朱继玉
 -- 2014.07.14
 
@@ -46,7 +46,6 @@ create table students(
 	max_constant_rights int default 0, -- 历史最大连对数
 	constant_rights int default 0,     -- 当前连对数，这个是各科目的合计
 	total_rights int default 0,        -- 累计做对题目数
---	prop_num  int default 0,   -- 道具数量，私有
 	treasure_frag int default 0, -- 藏宝图碎片数
 	certi_num  int default 0,  -- 奖状数，公开
 	lower_gem  int default 0,  -- 低级宝物数量，公开，宝物是分级的，这里分三级宝物，
@@ -109,17 +108,6 @@ create table maps (
 	primary key(ID)
 );
 
----- 表5：地图内容  系统初始表
---create table map_contents (
---	ID int,
---	map_id int,
---	cp_id  int,
---	serial int, -- 序号，各关卡在地图中的排序
---	primary key(ID)
---);
-
---create index map_checkpoint_index on map_contents (map_id);
-
 -- 表5：学生探索地图记录 动态表
 if exists(select * from sysobjects where name = 'student_maps')
 drop table student_maps;
@@ -140,8 +128,6 @@ create table student_maps (
 create index map_student_index on student_maps(student_id, map_id); -- 获取一个学生在某个地图的信息
 create index map_constant_right_index on student_maps (map_id, max_constant_rights); -- 最高连对排行
 create index map_total_right_index on student_maps (map_id, total_rights);           -- 累计做对题目排行
---create index map_index on student_maps(map_id);
---create index map_complete_index on student_maps (last_complete);
 
 -- 表6：关卡 系统初始表
 --      一个关卡应该只在一个地图中，所在地图可以算成关卡的一个属性
@@ -170,23 +156,18 @@ create table student_checkpoints(
 	student_id int,  -- 学生ID
 	map_id int,      -- 数据冗余，实际上根据cp_id，即可找到map_id，
 	                 -- 因为一个关卡应该只出现在一个地图中
-	cp_id int,       -- 关卡ID
+	checkpoint_id int,       -- 关卡ID
 	right_num int,   -- 答对的题目数
 	score int,       -- 一个关卡实际上相当于一份试卷，根据各题目的分值计算总分
 	pass bit default 0,      -- 是否通关，通关是不可逆过程，防止学生作弊，奖励不会重复发放
 	                         -- 即学生通过一关后，即使把已做的题目重新做错，
 	                         -- 答对题目数和得分会相应修改，但通关状态不会变
 	                         -- 通关后即发放奖励，包括银币和宝图碎片
---	silver bit default 0,    -- 银币奖励是否发给学生
---	treasure bit default 0,  -- 宝图碎片是否发给学生
---	                         -- 奖励和宝图碎片每个单元只能发一次，为防止学生作弊，必须记录结果
---	                         -- 否则，学生可以通过新把题目都做对，然后再做错几道，
---	                         -- 然后再重新做对，再次触发关卡通关事件
 	primary key(ID)
 );
 
 create index student_map_index on student_checkpoints(student_id, map_id);
-create index student_checkpoint_index on student_checkpoints(student_id, cp_id);
+create index student_checkpoint_index on student_checkpoints(student_id, checkpoint_id);
 
 -- 表8：关卡内容  系统初始表
 if exists(select * from sysobjects where name = 'cp_contents')
@@ -325,27 +306,12 @@ create table certi_rewards(
 
 create index reward_certi_index on certi_rewards(student_id, certi_id);
 
----- 表14：邮寄奖状记录  动态表
---if exists(select * from sysobjects where name = 'certi_mails')
---drop table certi_mails;
-
---create table certi_mails(
---	ID int,
---	student_id int,
---	reward_id  int,   -- certi_reward表的ID
-	
---    mail_time  datetime,
---	primary key(ID)
---);
-
---create index mail_certi_index on certi_mails(student_id, reward_id);
-
--- 表16：道具 配置表
+-- 表16：道具 配置表 该表目前只有三行数据，也可以用配置文件的方式存在
 if exists(select * from sysobjects where name = 'props')
 drop table props;
 
 create table props(
-	ID int identity(1000000, 1),
+	ID int, -- 只有有限的几种道具卡，可以人工编号
 	name   varchar(255),
 	photo  varchar(255),
 	remark varchar(255),
@@ -360,8 +326,8 @@ drop table prop_billes;
 create table prop_billes(
 	ID int identity(1000000, 1),
 	student_id int,
-	prop_id int,
-	number int,  -- 负数表示使用掉，正数表示获取，可能是系统赠送，也可能是购买
+	prop_id int,  -- 道具卡的编号
+	number int,   -- 负数表示使用掉，正数表示获取，可能是系统赠送，也可能是购买
 	remark varchar(255),
 	primary key(ID)
 );
@@ -416,22 +382,3 @@ create table silver_billes(
 );
 
 create index silver_bill_index on silver_billes (student_id);
-
----- 表20：充值记录  动态表
---create table rechanges(
---	ID int,
---	student_id int,    -- 学生ID
---	iscoin int, 
---	op_time datetime,
---	primary key(ID)
---);
-
----- 表21：兑换记录  动态表
---create table exchanges(
---	ID int,
---	student_id int,    -- 学生ID
---	silvercoin int, 
---	op_time datetime,
---	primary key(ID)
---);
-
