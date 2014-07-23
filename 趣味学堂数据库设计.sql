@@ -40,9 +40,10 @@ if exists(select * from sysobjects where name = 'students')
 drop table students;
 
 create table students(
-	id varchar(50),          -- 学生编号，在乐学网云平台中，编号是字符串类型的，GUID
-	signin int,      -- 已连续签到天数
-	exp_value int,   -- EXP|empirical value|empiric value 经验值，私有
+	id varchar(50),     -- 学生编号，在乐学网云平台中，编号是字符串类型的，GUID
+	checkin_days int,      -- 连续签到天数
+	last_checkin bigint,   -- 最后签到时间，和表student_signs的最后一条数据的时间是一致的
+	exp_value int,      -- EXP|empirical value|empiric value 经验值，私有
 	max_constant_rights int default 0, -- 历史最大连对数
 	constant_rights int default 0,     -- 当前连对数，这个是各科目的合计
 	total_rights int default 0,        -- 累计做对题目数
@@ -60,18 +61,17 @@ create index student_gem_index on students(high_gem, middle_gem, lower_gem);
 create index student_certi_index on students(certi_num);
 
 -- 表2：签到 动态表
-if exists(select * from sysobjects where name = 'student_signs')
-drop table student_signs;
+if exists(select * from sysobjects where name = 'student_checkins')
+drop table student_checkins;
 
-create table student_signs (
+create table student_checkins (
 	id int identity(1000000, 1),
 	student_id varchar(50),  -- 学生ID
-	sign_date int,   -- 签到日期，这里int型表示
-	signin bit,      -- 是否签到，学生进入趣味学堂，需要手动签到
+	checkin_time bigint,     -- 签到日期，这里bigint型表示，精确到秒数
 	primary key(ID),
 );
 
-create index sign_index on student_signs(student_id);
+create index checkin_index on student_checkins (student_id);
 
 -- 表3：登录 动态表
 --      此表用于判定学生当前是否在线，另外对分析用户活跃度，出错时排错等很有用
@@ -81,15 +81,15 @@ drop table student_logins;
 create table student_logins (
 	id int identity(1000000, 1),
 	student_id varchar(50),  -- 学生ID
-	loadin int,      -- 进入时间
-	loadout int,     -- 退出时间，利用该字段，可以粗略估计用户在线状态
+	login_time bigint,      -- 进入时间
+	logout_time bigint,     -- 退出时间，利用该字段，可以粗略估计用户在线状态
 	ipaddress   varchar(255),
 	client_type varchar(255), -- 记录来源，客户端、移动端、浏览器，尽量详细，
 	                          -- 客户端尽量带版本号，浏览器尽量带版本和版本号
 	primary key(ID),
 );
 
-create index login_index on student_logins(student_id);
+create index login_index on student_logins(student_id, login_time);
 
 --------------------------------------------------------------------------------
 -- 与地图相关的表

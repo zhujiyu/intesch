@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+  <students id="100121" signin="2" last_sign="2014-07-20 05:20:22" exp_value="1258"/>
+  <students id="100122" signin="0" exp_value="128" last_sign="2014-07-18 15:20:22"/>
+  <student_signs student_id="100121" sign_date="2014-07-20 05:20:22"/>
+  <student_signs student_id="100121" sign_date="2014-07-19 11:42:00"/>
+</dataset>

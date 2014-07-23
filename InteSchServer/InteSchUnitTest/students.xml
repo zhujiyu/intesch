@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+  <students id="100121" checkin_days="2" last_checkin="1405804822" exp_value="1258"/>
+  <students id="100122" checkin_days="1" last_checkin="1405668022" exp_value="128"/><!-- 2014-07-18 15:20 -->
+  <student_checkins student_id="100121" checkin_time="1405804822"/><!--2014-07-20 05:20-->
+  <student_checkins student_id="100121" checkin_time="1405741320"/><!--2014-07-19 11:42-->
+  <student_checkins student_id="100122" checkin_time="1405668022"/><!-- 2014-07-18 15:20 -->
+</dataset>

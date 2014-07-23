@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{15F6BF43-629D-4D66-A655-CBAB2A786743}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{300AE4E7-11D5-4FB7-9429-446A0AA968D6}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InteSchBusiness</RootNamespace>
-    <AssemblyName>InteSchBusiness</AssemblyName>
+    <RootNamespace>OtherTest</RootNamespace>
+    <AssemblyName>OtherTest</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -39,51 +41,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cache\InteSchCache.cs" />
-    <Compile Include="Cache\RowCache.cs" />
-    <Compile Include="Cache\VectorCache.cs" />
-    <Compile Include="Certificate.cs" />
-    <Compile Include="CheckPoint.cs" />
-    <Compile Include="DataSet\InteSchDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>InteSchDataSet.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Error\ContentError.cs" />
-    <Compile Include="Error\InternalError.cs" />
-    <Compile Include="Error\OtherError.cs" />
-    <Compile Include="Error\ProcessError.cs" />
-    <Compile Include="Error\UserError.cs" />
-    <Compile Include="Gem.cs" />
-    <Compile Include="ISCoin.cs" />
-    <Compile Include="Map.cs" />
-    <Compile Include="Problem.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <DependentUpon>Settings.settings</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="Student.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SVCoin.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="DataSet\InteSchDataSet.xsc">
-      <DependentUpon>InteSchDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="DataSet\InteSchDataSet.xsd">
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="test.xml">
       <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>InteSchDataSet.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="DataSet\InteSchDataSet.xss">
-      <DependentUpon>InteSchDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InteSchBusiness\InteSchBusiness.csproj">
+      <Project>{15f6bf43-629d-4d66-a655-cbab2a786743}</Project>
+      <Name>InteSchBusiness</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
