@@ -11,8 +11,14 @@ namespace InteSchBusiness.Cache
 {
     class RowCache : InteSchCache
     {
-        public RowCache(string _id)
-            : base(_id)
+        public RowCache(string _server)
+            : base(_server)
+        {
+
+        }
+
+        public RowCache(string[] _servers)
+            : base(_servers)
         {
 
         }
@@ -57,6 +63,7 @@ namespace InteSchBusiness.Cache
 
         public void SetCheckPoints(string id, object value)
         {
+            SetCache("cp" + id, value);
         }
     }
 }

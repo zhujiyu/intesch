@@ -8,10 +8,14 @@ namespace InteSchBusiness.Cache
 {
     class VectorCache : InteSchCache
     {
-        public VectorCache(string student_id)
-            : base(student_id)
+        public VectorCache(string _server)
+            : base(_server)
         {
+        }
 
+        public VectorCache(string[] _servers)
+            : base(_servers)
+        {
         }
 
         new protected object GetCache(string keyid)
@@ -21,7 +25,6 @@ namespace InteSchBusiness.Cache
 
         new protected void SetCache(string keyid, object Value)
         {
-            // todo: set the attribute value to cache server.
             base.SetCache(keyid + "-vector-", Value);
         }
 

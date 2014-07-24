@@ -11,7 +11,7 @@
       <Value Profile="(Default)">Data Source=ZHUJIYU;Initial Catalog=app_intesch;Integrated Security=True</Value>
     </Setting>
     <Setting Name="memcache" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">127.0.0.1</Value>
+      <Value Profile="(Default)">127.0.0.1:11211</Value>
     </Setting>
   </Settings>
 </SettingsFile>
