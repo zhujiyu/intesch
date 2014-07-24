@@ -96,6 +96,62 @@ namespace InteSchUnitTest
         }
 
         [TestMethod]
+        public void InlineTest()
+        {
+            Student stu = new Student("100121");
+            Assert.AreEqual(stu.InLine(), false);
+
+            using (ShimsContext.Create())
+            {
+                ShimDateTime.NowGet = () => new DateTime(2014, 7, 20, 5, 35, 22);//相差了12分钟
+                Assert.AreEqual(stu.InLine(), true);
+            }
+        }
+
+        [TestMethod]
+        public void LoginTest()
+        {
+            Student stu = new Student("100121");
+            stu.Login("192.168.12.38", "chrome v8.0.124");
+
+            InteSchBusiness.DataSet.InteSchDataSetTableAdapters.student_loginsTableAdapter adapter
+                = new InteSchBusiness.DataSet.InteSchDataSetTableAdapters.student_loginsTableAdapter();
+            InteSchBusiness.DataSet.InteSchDataSet.student_loginsDataTable table
+                = adapter.GetDataByIDTop("100121");
+            long curr =Student.ConvertDateTimeInt(DateTime.Now);
+
+            Assert.AreEqual(1, table.Count);
+            Assert.AreEqual(curr, table[0].login_time);
+        }
+
+        [TestMethod]
+        public void LogoutTest()
+        {
+            Student stu = new Student("100121");
+            long ticks = DateTime.Now.Ticks;
+            long curr = Student.ConvertDateTimeInt(DateTime.Now);
+
+            InteSchBusiness.DataSet.InteSchDataSetTableAdapters.student_loginsTableAdapter adapter
+                = new InteSchBusiness.DataSet.InteSchDataSetTableAdapters.student_loginsTableAdapter();
+            InteSchBusiness.DataSet.InteSchDataSet.student_loginsDataTable table;
+
+            using (ShimsContext.Create())
+            {
+                ShimDateTime.NowGet = () =>
+                {
+                    DateTime a = new DateTime(ticks);
+                    return a.AddMinutes(25);
+                };
+                stu.Logout();
+
+                table = adapter.GetDataByIDTop("100121");
+                Assert.AreEqual(1, table.Count);
+                Assert.AreEqual(curr, table[0].login_time);
+                Assert.AreEqual(curr + 25 * 60, table[0].logout_time);
+            }
+        }
+
+        [TestMethod]
         public void HasCheckedTest()
         {
             Student stu = new Student("100121");

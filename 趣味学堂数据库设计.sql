@@ -83,8 +83,8 @@ create table student_logins (
 	student_id varchar(50),  -- 学生ID
 	login_time bigint,      -- 进入时间
 	logout_time bigint,     -- 退出时间，利用该字段，可以粗略估计用户在线状态
-	ipaddress   varchar(255),
-	client_type varchar(255), -- 记录来源，客户端、移动端、浏览器，尽量详细，
+	ipaddress varchar(255),
+	client    varchar(255), -- 记录来源，客户端、移动端、浏览器，尽量详细，
 	                          -- 客户端尽量带版本号，浏览器尽量带版本和版本号
 	primary key(ID),
 );

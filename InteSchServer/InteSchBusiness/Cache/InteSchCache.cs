@@ -8,18 +8,11 @@ namespace InteSchBusiness.Cache
 {
     public class InteSchCache
     {
-        private string student_id = null;
+        protected string conn = null;
 
-        public string Student_ID
+        public InteSchCache(string _conn)
         {
-            get { return this.student_id; }
-        }
-
-        public InteSchCache() { }
-
-        public InteSchCache(string student_id)
-        {
-            this.student_id = student_id;
+            this.conn = _conn;
         }
 
         protected object GetCache(string keyid)
@@ -27,10 +20,9 @@ namespace InteSchBusiness.Cache
             return null;
         }
 
-        protected int SetCache(string keyid, object Value)
+        protected void SetCache(string keyid, object Value)
         {
             // todo: set the attribute value to cache server.
-            return 0;
         }
     }
 }

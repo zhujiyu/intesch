@@ -6991,7 +6991,7 @@ namespace InteSchBusiness.DataSet {
             
             private global::System.Data.DataColumn columnipaddress;
             
-            private global::System.Data.DataColumn columnclient_type;
+            private global::System.Data.DataColumn columnclient;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -7068,9 +7068,9 @@ namespace InteSchBusiness.DataSet {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn client_typeColumn {
+            public global::System.Data.DataColumn clientColumn {
                 get {
-                    return this.columnclient_type;
+                    return this.columnclient;
                 }
             }
             
@@ -7111,7 +7111,7 @@ namespace InteSchBusiness.DataSet {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public student_loginsRow Addstudent_loginsRow(string student_id, long login_time, long logout_time, string ipaddress, string client_type) {
+            public student_loginsRow Addstudent_loginsRow(string student_id, long login_time, long logout_time, string ipaddress, string client) {
                 student_loginsRow rowstudent_loginsRow = ((student_loginsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -7119,7 +7119,7 @@ namespace InteSchBusiness.DataSet {
                         login_time,
                         logout_time,
                         ipaddress,
-                        client_type};
+                        client};
                 rowstudent_loginsRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowstudent_loginsRow);
                 return rowstudent_loginsRow;
@@ -7154,7 +7154,7 @@ namespace InteSchBusiness.DataSet {
                 this.columnlogin_time = base.Columns["login_time"];
                 this.columnlogout_time = base.Columns["logout_time"];
                 this.columnipaddress = base.Columns["ipaddress"];
-                this.columnclient_type = base.Columns["client_type"];
+                this.columnclient = base.Columns["client"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -7170,8 +7170,8 @@ namespace InteSchBusiness.DataSet {
                 base.Columns.Add(this.columnlogout_time);
                 this.columnipaddress = new global::System.Data.DataColumn("ipaddress", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnipaddress);
-                this.columnclient_type = new global::System.Data.DataColumn("client_type", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnclient_type);
+                this.columnclient = new global::System.Data.DataColumn("client", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnclient);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnid}, true));
                 this.columnid.AutoIncrement = true;
@@ -7182,7 +7182,7 @@ namespace InteSchBusiness.DataSet {
                 this.columnid.Unique = true;
                 this.columnstudent_id.MaxLength = 50;
                 this.columnipaddress.MaxLength = 255;
-                this.columnclient_type.MaxLength = 255;
+                this.columnclient.MaxLength = 255;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -10528,17 +10528,17 @@ namespace InteSchBusiness.DataSet {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string client_type {
+            public string client {
                 get {
                     try {
-                        return ((string)(this[this.tablestudent_logins.client_typeColumn]));
+                        return ((string)(this[this.tablestudent_logins.clientColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("表“student_logins”中列“client_type”的值为 DBNull。", e);
+                        throw new global::System.Data.StrongTypingException("表“student_logins”中列“client”的值为 DBNull。", e);
                     }
                 }
                 set {
-                    this[this.tablestudent_logins.client_typeColumn] = value;
+                    this[this.tablestudent_logins.clientColumn] = value;
                 }
             }
             
@@ -10592,14 +10592,14 @@ namespace InteSchBusiness.DataSet {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool Isclient_typeNull() {
-                return this.IsNull(this.tablestudent_logins.client_typeColumn);
+            public bool IsclientNull() {
+                return this.IsNull(this.tablestudent_logins.clientColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void Setclient_typeNull() {
-                this[this.tablestudent_logins.client_typeColumn] = global::System.Convert.DBNull;
+            public void SetclientNull() {
+                this[this.tablestudent_logins.clientColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -13262,11 +13262,23 @@ SELECT id, name, photo, remark, map_id, serial FROM checkpoints WHERE (id = @id)
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[3];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = "SELECT id, name, photo, remark, map_id, serial FROM dbo.checkpoints";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[1].Connection = this.Connection;
+            this._commandCollection[1].CommandText = "SELECT id, name, photo, remark, map_id, serial FROM dbo.checkpoints\r\nwhere id = @" +
+                "id";
+            this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@id", global::System.Data.SqlDbType.VarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, "id", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[2].Connection = this.Connection;
+            this._commandCollection[2].CommandText = "SELECT id, name, photo, remark, map_id, serial FROM dbo.checkpoints\r\nwhere map_id" +
+                " = @map_id\r\norder by id";
+            this._commandCollection[2].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@map_id", global::System.Data.SqlDbType.VarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, "map_id", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -13288,6 +13300,78 @@ SELECT id, name, photo, remark, map_id, serial FROM checkpoints WHERE (id = @id)
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
         public virtual InteSchDataSet.checkpointsDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
+            InteSchDataSet.checkpointsDataTable dataTable = new InteSchDataSet.checkpointsDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, false)]
+        public virtual int FillByID(InteSchDataSet.checkpointsDataTable dataTable, string id) {
+            this.Adapter.SelectCommand = this.CommandCollection[1];
+            if ((id == null)) {
+                throw new global::System.ArgumentNullException("id");
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((string)(id));
+            }
+            if ((this.ClearBeforeFill == true)) {
+                dataTable.Clear();
+            }
+            int returnValue = this.Adapter.Fill(dataTable);
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
+        public virtual InteSchDataSet.checkpointsDataTable GetDataByID(string id) {
+            this.Adapter.SelectCommand = this.CommandCollection[1];
+            if ((id == null)) {
+                throw new global::System.ArgumentNullException("id");
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((string)(id));
+            }
+            InteSchDataSet.checkpointsDataTable dataTable = new InteSchDataSet.checkpointsDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, false)]
+        public virtual int FillByMapID(InteSchDataSet.checkpointsDataTable dataTable, string map_id) {
+            this.Adapter.SelectCommand = this.CommandCollection[2];
+            if ((map_id == null)) {
+                this.Adapter.SelectCommand.Parameters[0].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((string)(map_id));
+            }
+            if ((this.ClearBeforeFill == true)) {
+                dataTable.Clear();
+            }
+            int returnValue = this.Adapter.Fill(dataTable);
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
+        public virtual InteSchDataSet.checkpointsDataTable GetDataByMapID(string map_id) {
+            this.Adapter.SelectCommand = this.CommandCollection[2];
+            if ((map_id == null)) {
+                this.Adapter.SelectCommand.Parameters[0].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((string)(map_id));
+            }
             InteSchDataSet.checkpointsDataTable dataTable = new InteSchDataSet.checkpointsDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
@@ -16483,12 +16567,18 @@ SELECT id, name, remark, _subject, semester, edition, checkpoints FROM maps WHER
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[2];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = "SELECT id, name, remark, [_subject], semester, edition, checkpoints FROM dbo.maps" +
                 "";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[1].Connection = this.Connection;
+            this._commandCollection[1].CommandText = "SELECT id, name, remark, [_subject], semester, edition, checkpoints FROM dbo.maps" +
+                "\r\nwhere id = @id";
+            this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@id", global::System.Data.SqlDbType.VarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, "id", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -16510,6 +16600,42 @@ SELECT id, name, remark, _subject, semester, edition, checkpoints FROM maps WHER
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
         public virtual InteSchDataSet.mapsDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
+            InteSchDataSet.mapsDataTable dataTable = new InteSchDataSet.mapsDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, false)]
+        public virtual int FillByID(InteSchDataSet.mapsDataTable dataTable, string id) {
+            this.Adapter.SelectCommand = this.CommandCollection[1];
+            if ((id == null)) {
+                throw new global::System.ArgumentNullException("id");
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((string)(id));
+            }
+            if ((this.ClearBeforeFill == true)) {
+                dataTable.Clear();
+            }
+            int returnValue = this.Adapter.Fill(dataTable);
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
+        public virtual InteSchDataSet.mapsDataTable GetDataByID(string id) {
+            this.Adapter.SelectCommand = this.CommandCollection[1];
+            if ((id == null)) {
+                throw new global::System.ArgumentNullException("id");
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((string)(id));
+            }
             InteSchDataSet.mapsDataTable dataTable = new InteSchDataSet.mapsDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
@@ -20161,11 +20287,11 @@ SELECT id, student_id, checkin_time FROM student_checkins WHERE (id = @id)";
             tableMapping.ColumnMappings.Add("login_time", "login_time");
             tableMapping.ColumnMappings.Add("logout_time", "logout_time");
             tableMapping.ColumnMappings.Add("ipaddress", "ipaddress");
-            tableMapping.ColumnMappings.Add("client_type", "client_type");
+            tableMapping.ColumnMappings.Add("client", "client");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [dbo].[student_logins] WHERE (([id] = @Original_id) AND ((@IsNull_student_id = 1 AND [student_id] IS NULL) OR ([student_id] = @Original_student_id)) AND ((@IsNull_login_time = 1 AND [login_time] IS NULL) OR ([login_time] = @Original_login_time)) AND ((@IsNull_logout_time = 1 AND [logout_time] IS NULL) OR ([logout_time] = @Original_logout_time)) AND ((@IsNull_ipaddress = 1 AND [ipaddress] IS NULL) OR ([ipaddress] = @Original_ipaddress)) AND ((@IsNull_client_type = 1 AND [client_type] IS NULL) OR ([client_type] = @Original_client_type)))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [dbo].[student_logins] WHERE (([id] = @Original_id) AND ((@IsNull_student_id = 1 AND [student_id] IS NULL) OR ([student_id] = @Original_student_id)) AND ((@IsNull_login_time = 1 AND [login_time] IS NULL) OR ([login_time] = @Original_login_time)) AND ((@IsNull_logout_time = 1 AND [logout_time] IS NULL) OR ([logout_time] = @Original_logout_time)) AND ((@IsNull_ipaddress = 1 AND [ipaddress] IS NULL) OR ([ipaddress] = @Original_ipaddress)) AND ((@IsNull_client = 1 AND [client] IS NULL) OR ([client] = @Original_client)))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_student_id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "student_id", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
@@ -20176,28 +20302,28 @@ SELECT id, student_id, checkin_time FROM student_checkins WHERE (id = @id)";
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_logout_time", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "logout_time", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_ipaddress", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "ipaddress", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_ipaddress", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "ipaddress", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_client_type", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "client_type", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_client_type", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "client_type", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_client", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "client", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_client", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "client", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = @"INSERT INTO [dbo].[student_logins] ([student_id], [login_time], [logout_time], [ipaddress], [client_type]) VALUES (@student_id, @login_time, @logout_time, @ipaddress, @client_type);
-SELECT id, student_id, login_time, logout_time, ipaddress, client_type FROM student_logins WHERE (id = SCOPE_IDENTITY())";
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO [dbo].[student_logins] ([student_id], [login_time], [logout_time], [ipaddress], [client]) VALUES (@student_id, @login_time, @logout_time, @ipaddress, @client);
+SELECT id, student_id, login_time, logout_time, ipaddress, client FROM student_logins WHERE (id = SCOPE_IDENTITY())";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@student_id", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "student_id", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@login_time", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "login_time", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@logout_time", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "logout_time", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@ipaddress", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "ipaddress", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@client_type", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "client_type", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@client", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "client", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [dbo].[student_logins] SET [student_id] = @student_id, [login_time] = @login_time, [logout_time] = @logout_time, [ipaddress] = @ipaddress, [client_type] = @client_type WHERE (([id] = @Original_id) AND ((@IsNull_student_id = 1 AND [student_id] IS NULL) OR ([student_id] = @Original_student_id)) AND ((@IsNull_login_time = 1 AND [login_time] IS NULL) OR ([login_time] = @Original_login_time)) AND ((@IsNull_logout_time = 1 AND [logout_time] IS NULL) OR ([logout_time] = @Original_logout_time)) AND ((@IsNull_ipaddress = 1 AND [ipaddress] IS NULL) OR ([ipaddress] = @Original_ipaddress)) AND ((@IsNull_client_type = 1 AND [client_type] IS NULL) OR ([client_type] = @Original_client_type)));
-SELECT id, student_id, login_time, logout_time, ipaddress, client_type FROM student_logins WHERE (id = @id)";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE [dbo].[student_logins] SET [student_id] = @student_id, [login_time] = @login_time, [logout_time] = @logout_time, [ipaddress] = @ipaddress, [client] = @client WHERE (([id] = @Original_id) AND ((@IsNull_student_id = 1 AND [student_id] IS NULL) OR ([student_id] = @Original_student_id)) AND ((@IsNull_login_time = 1 AND [login_time] IS NULL) OR ([login_time] = @Original_login_time)) AND ((@IsNull_logout_time = 1 AND [logout_time] IS NULL) OR ([logout_time] = @Original_logout_time)) AND ((@IsNull_ipaddress = 1 AND [ipaddress] IS NULL) OR ([ipaddress] = @Original_ipaddress)) AND ((@IsNull_client = 1 AND [client] IS NULL) OR ([client] = @Original_client)));
+SELECT id, student_id, login_time, logout_time, ipaddress, client FROM student_logins WHERE (id = @id)";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@student_id", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "student_id", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@login_time", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "login_time", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@logout_time", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "logout_time", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@ipaddress", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "ipaddress", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@client_type", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "client_type", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@client", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "client", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_student_id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "student_id", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_student_id", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "student_id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
@@ -20207,8 +20333,8 @@ SELECT id, student_id, login_time, logout_time, ipaddress, client_type FROM stud
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_logout_time", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "logout_time", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_ipaddress", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "ipaddress", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_ipaddress", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "ipaddress", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_client_type", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "client_type", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_client_type", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "client_type", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_client", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "client", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_client", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "client", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@id", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "id", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
@@ -20225,8 +20351,8 @@ SELECT id, student_id, login_time, logout_time, ipaddress, client_type FROM stud
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[2];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT id, student_id, login_time, logout_time, ipaddress, client_type FROM dbo.s" +
-                "tudent_logins";
+            this._commandCollection[0].CommandText = "SELECT id, student_id, login_time, logout_time, ipaddress, client FROM dbo.studen" +
+                "t_logins";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
@@ -20329,7 +20455,7 @@ SELECT id, student_id, login_time, logout_time, ipaddress, client_type FROM stud
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(int Original_id, string Original_student_id, global::System.Nullable<long> Original_login_time, global::System.Nullable<long> Original_logout_time, string Original_ipaddress, string Original_client_type) {
+        public virtual int Delete(int Original_id, string Original_student_id, global::System.Nullable<long> Original_login_time, global::System.Nullable<long> Original_logout_time, string Original_ipaddress, string Original_client) {
             this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(Original_id));
             if ((Original_student_id == null)) {
                 this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(1));
@@ -20363,13 +20489,13 @@ SELECT id, student_id, login_time, logout_time, ipaddress, client_type FROM stud
                 this.Adapter.DeleteCommand.Parameters[7].Value = ((object)(0));
                 this.Adapter.DeleteCommand.Parameters[8].Value = ((string)(Original_ipaddress));
             }
-            if ((Original_client_type == null)) {
+            if ((Original_client == null)) {
                 this.Adapter.DeleteCommand.Parameters[9].Value = ((object)(1));
                 this.Adapter.DeleteCommand.Parameters[10].Value = global::System.DBNull.Value;
             }
             else {
                 this.Adapter.DeleteCommand.Parameters[9].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[10].Value = ((string)(Original_client_type));
+                this.Adapter.DeleteCommand.Parameters[10].Value = ((string)(Original_client));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
             if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -20391,7 +20517,7 @@ SELECT id, student_id, login_time, logout_time, ipaddress, client_type FROM stud
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(string student_id, global::System.Nullable<long> login_time, global::System.Nullable<long> logout_time, string ipaddress, string client_type) {
+        public virtual int Insert(string student_id, global::System.Nullable<long> login_time, global::System.Nullable<long> logout_time, string ipaddress, string client) {
             if ((student_id == null)) {
                 this.Adapter.InsertCommand.Parameters[0].Value = global::System.DBNull.Value;
             }
@@ -20416,11 +20542,11 @@ SELECT id, student_id, login_time, logout_time, ipaddress, client_type FROM stud
             else {
                 this.Adapter.InsertCommand.Parameters[3].Value = ((string)(ipaddress));
             }
-            if ((client_type == null)) {
+            if ((client == null)) {
                 this.Adapter.InsertCommand.Parameters[4].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.InsertCommand.Parameters[4].Value = ((string)(client_type));
+                this.Adapter.InsertCommand.Parameters[4].Value = ((string)(client));
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -20442,7 +20568,7 @@ SELECT id, student_id, login_time, logout_time, ipaddress, client_type FROM stud
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(string student_id, global::System.Nullable<long> login_time, global::System.Nullable<long> logout_time, string ipaddress, string client_type, int Original_id, string Original_student_id, global::System.Nullable<long> Original_login_time, global::System.Nullable<long> Original_logout_time, string Original_ipaddress, string Original_client_type, int id) {
+        public virtual int Update(string student_id, global::System.Nullable<long> login_time, global::System.Nullable<long> logout_time, string ipaddress, string client, int Original_id, string Original_student_id, global::System.Nullable<long> Original_login_time, global::System.Nullable<long> Original_logout_time, string Original_ipaddress, string Original_client, int id) {
             if ((student_id == null)) {
                 this.Adapter.UpdateCommand.Parameters[0].Value = global::System.DBNull.Value;
             }
@@ -20467,11 +20593,11 @@ SELECT id, student_id, login_time, logout_time, ipaddress, client_type FROM stud
             else {
                 this.Adapter.UpdateCommand.Parameters[3].Value = ((string)(ipaddress));
             }
-            if ((client_type == null)) {
+            if ((client == null)) {
                 this.Adapter.UpdateCommand.Parameters[4].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[4].Value = ((string)(client_type));
+                this.Adapter.UpdateCommand.Parameters[4].Value = ((string)(client));
             }
             this.Adapter.UpdateCommand.Parameters[5].Value = ((int)(Original_id));
             if ((Original_student_id == null)) {
@@ -20506,13 +20632,13 @@ SELECT id, student_id, login_time, logout_time, ipaddress, client_type FROM stud
                 this.Adapter.UpdateCommand.Parameters[12].Value = ((object)(0));
                 this.Adapter.UpdateCommand.Parameters[13].Value = ((string)(Original_ipaddress));
             }
-            if ((Original_client_type == null)) {
+            if ((Original_client == null)) {
                 this.Adapter.UpdateCommand.Parameters[14].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[15].Value = global::System.DBNull.Value;
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[14].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[15].Value = ((string)(Original_client_type));
+                this.Adapter.UpdateCommand.Parameters[15].Value = ((string)(Original_client));
             }
             this.Adapter.UpdateCommand.Parameters[16].Value = ((int)(id));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
@@ -20535,8 +20661,8 @@ SELECT id, student_id, login_time, logout_time, ipaddress, client_type FROM stud
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(string student_id, global::System.Nullable<long> login_time, global::System.Nullable<long> logout_time, string ipaddress, string client_type, int Original_id, string Original_student_id, global::System.Nullable<long> Original_login_time, global::System.Nullable<long> Original_logout_time, string Original_ipaddress, string Original_client_type) {
-            return this.Update(student_id, login_time, logout_time, ipaddress, client_type, Original_id, Original_student_id, Original_login_time, Original_logout_time, Original_ipaddress, Original_client_type, Original_id);
+        public virtual int Update(string student_id, global::System.Nullable<long> login_time, global::System.Nullable<long> logout_time, string ipaddress, string client, int Original_id, string Original_student_id, global::System.Nullable<long> Original_login_time, global::System.Nullable<long> Original_logout_time, string Original_ipaddress, string Original_client) {
+            return this.Update(student_id, login_time, logout_time, ipaddress, client, Original_id, Original_student_id, Original_login_time, Original_logout_time, Original_ipaddress, Original_client, Original_id);
         }
     }
     

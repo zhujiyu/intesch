@@ -32,5 +32,15 @@ namespace InteSchBusiness.Properties {
                 return ((string)(this["app_inteschConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
+        public string memcache {
+            get {
+                return ((string)(this["memcache"]));
+            }
+        }
     }
 }

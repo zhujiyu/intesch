@@ -84,6 +84,27 @@ namespace OtherTest
 
         static void Main(string[] args)
         {
+            int mi = 120;
+            double a = 1.01, b = 1;
+
+            for (int i = 0; i < mi; i++)
+                b *= a;
+            Console.WriteLine(b);
+
+            while (mi % 2 == 0)
+            {
+                a *= a;
+                mi /= 2;
+            }
+            Console.WriteLine(a);
+
+            b = 1;
+            for (int i = 0; i < mi; i++)
+            {
+                b *= a;
+            }
+            Console.WriteLine(b);
+
             Console.WriteLine(DateTime.Now.Ticks);
             Console.WriteLine(ConvertDateTimeInt(DateTime.Now));
         }

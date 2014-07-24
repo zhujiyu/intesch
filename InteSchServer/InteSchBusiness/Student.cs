@@ -22,8 +22,6 @@ namespace InteSchBusiness
             set { id = value; }
         }
 
-        studentsTableAdapter adapter = new studentsTableAdapter();
-
         InteSchDataSet.studentsRow data = null;
 
         public InteSchDataSet.studentsRow Data
@@ -42,33 +40,33 @@ namespace InteSchBusiness
             }
         }
 
-        public Student(string _id)
+        public Student(string student_id)
         {
-            this.id = _id;
+            this.id = student_id;
             this.data = GetFromCache();
         }
 
         private InteSchDataSet.studentsRow GetFromDB()
         {
+            studentsTableAdapter adapter = new studentsTableAdapter();
             InteSchDataSet.studentsDataTable table = adapter.GetDataByID(this.id);
+
             if (table.Count != 1)
                 throw new Error.UserError(@"编号为" + this.id + "的学生不存在");
-            RowCache row = new RowCache(this.id);
+
+            RowCache row = new RowCache(Properties.Settings.Default.memcache);
             row.SetStudent(this.id, table[0]);
+
             return table[0];
         }
 
         private InteSchDataSet.studentsRow GetFromCache()
         {
-            RowCache row = new RowCache(this.id);
+            RowCache row = new RowCache(Properties.Settings.Default.memcache);
             object stu = row.GetStudent(this.id);
 
             if (stu == null)
-            {
-                InteSchDataSet.studentsRow r = GetFromDB();
-                row.SetStudent(this.id, r);
-                return r;
-            }
+                return GetFromDB();
 
             if (stu is InteSchDataSet.studentsRow)
                 return stu as InteSchDataSet.studentsRow;
@@ -93,31 +91,52 @@ namespace InteSchBusiness
         /// <returns>true表示在线，false表示离线</returns>
         public bool InLine()
         {
+            long curr = ConvertDateTimeInt(DateTime.Now);
+
+            //利用缓存判断用户是否在线
+            VectorCache cache = new VectorCache(Properties.Settings.Default.memcache);
+            long inline = cache.GetInline(this.id);
+            if (inline > 0 && inline + 300 > curr)
+                return true;
+
             student_loginsTableAdapter login = new student_loginsTableAdapter();
             InteSchDataSet.student_loginsDataTable table = login.GetDataByIDTop(this.id);
             if (table.Count == 0)
                 return false;
 
-            long curr = ConvertDateTimeInt(DateTime.Now);
             if (table[0].logout_time + 900 < curr) // 15分钟
                 return false;
 
             return true;
         }
 
-        public void Login(string ipaddress, string client_type)
+        public void SetInline()
+        {
+            long curr = ConvertDateTimeInt(DateTime.Now);
+            VectorCache cache = new VectorCache(Properties.Settings.Default.memcache);
+            cache.SetInline(this.id, curr);
+        }
+
+        public void Login(string ipaddress, string client)
         {
             if (this.InLine())
                 return;
 
             student_loginsTableAdapter login = new student_loginsTableAdapter();
             long curr = ConvertDateTimeInt(DateTime.Now);
-            login.Insert(this.id, curr, curr, ipaddress, client_type);
+            login.Insert(this.id, curr, curr, ipaddress, client);
 
             InteSchDataSet.student_loginsDataTable table = login.GetDataByIDTop(this.id);
             // 存到缓存里
         }
 
+        /// <summary>
+        /// 学生进入趣味学堂后，将其ID放进一个队列里
+        /// 队列每隔几分钟取出一批学生ID，检查他们是否还在线，
+        /// 并记录他们的在线时长，
+        /// 如果已经下线，超过10分钟没有活动可以认为下线了，
+        /// 将其ID从队列中摘掉
+        /// </summary>
         public void Logout()
         {
             student_loginsTableAdapter login = new student_loginsTableAdapter();
@@ -127,11 +146,14 @@ namespace InteSchBusiness
             if (table.Count == 0)
                 throw new ContentError("不存在用户登录数据");
 
+            table[0].BeginEdit();
             table[0].logout_time = curr;
+            table[0].EndEdit();
             login.Update(table[0]);
             //清理缓存
         }
 
+        
         /// <summary>
         /// 今天是否已经签到  
         /// </summary>
@@ -164,7 +186,7 @@ namespace InteSchBusiness
             signAdapter.student_checkin(this.id, curr, yes);
 
             this.data = GetFromDB();
-            RowCache row = new RowCache(this.id);
+            RowCache row = new RowCache(Properties.Settings.Default.memcache);
             row.SetStudent(this.id, this.data);
         }
 
