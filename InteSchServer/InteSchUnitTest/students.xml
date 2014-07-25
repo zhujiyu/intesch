@@ -7,4 +7,7 @@
   <student_checkins student_id="100122" checkin_time="1405668022"/><!--2014-07-18 15:20-->
   <student_logins student_id="100121" login_time="1405804822" logout_time="1405805022" ipaddress="192.168.10.88" client=""/>
   <!--login 2014-07-20 05:20:00 logout 05:23:20 -->
+
+  <student_maps student_id="100121" map_id="125001"></student_maps>
+  <student_maps student_id="100121" map_id="125002"></student_maps>
 </dataset>

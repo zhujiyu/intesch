@@ -115,7 +115,7 @@ drop table student_maps;
 create table student_maps (
 	id int identity(1000000, 1),
 	student_id varchar(50),  -- 学生ID
-	map_id int,
+	map_id varchar(50),
 	max_constant_rights int default 0, 
 	constant_rights int default 0, 
 	total_rights int default 0,

@@ -3,6 +3,7 @@ using System.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using InteSchBusiness;
+using InteSchBusiness.DataSet;
 using System.Fakes;
 using Microsoft.QualityTools.Testing.Fakes;
 
@@ -79,6 +80,8 @@ namespace InteSchUnitTest
         [ClassInitialize()]
         public static void Prepare(TestContext test)
         {
+            InteSchBusiness.Cache.InteSchCache cache = new InteSchBusiness.Cache.InteSchCache("127.0.0.1:11211");
+            cache.Flush();
             InitData("../../students.xml");
         }
 
@@ -89,7 +92,7 @@ namespace InteSchUnitTest
             Student stu = new Student("100121");
 
             Assert.AreEqual("100121", stu.ID);
-            Assert.AreEqual(1258, stu.exp_value);
+            Assert.AreEqual(1258, stu.Exp_value);
 
             stu = new Student("100212");
             Assert.AreEqual(stu.ID, "100212");
@@ -122,6 +125,7 @@ namespace InteSchUnitTest
 
             Assert.AreEqual(1, table.Count);
             Assert.AreEqual(curr, table[0].login_time);
+            System.Diagnostics.Debug.WriteLine("登入测试完成");
         }
 
         [TestMethod]
@@ -149,6 +153,7 @@ namespace InteSchUnitTest
                 Assert.AreEqual(curr, table[0].login_time);
                 Assert.AreEqual(curr + 25 * 60, table[0].logout_time);
             }
+            System.Diagnostics.Debug.WriteLine("登出测试完成");
         }
 
         [TestMethod]
@@ -172,6 +177,7 @@ namespace InteSchUnitTest
                 ShimDateTime.TodayGet = () => new DateTime(2014, 7, 18);
                 Assert.AreEqual(stu.HasChecked(), true);
             }
+            System.Diagnostics.Debug.WriteLine("查询签到状态测试完成");
         }
 
         [TestMethod]
@@ -208,5 +214,22 @@ namespace InteSchUnitTest
                 Assert.AreEqual(stu.HasCheckinDays(), 3);
             }
         }
+
+        [TestMethod]
+        public void LoadStudentMapsTest()
+        {
+            Student stu = new Student("100121");
+            StudentMap[] maps = stu.LoadMaps();
+            Assert.AreEqual(maps.Length, 2);
+
+            maps = stu.LoadMaps();
+            Assert.AreEqual(maps[0].student_id, "100121");
+            Assert.AreEqual(maps[1].map_id, "125002");
+
+            stu = new Student("100122");
+            maps = stu.LoadMaps();
+            Assert.AreEqual(maps.Length, 0);
+        }
+
     }
 }

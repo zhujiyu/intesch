@@ -34,24 +34,45 @@ namespace InteSchBusiness.Cache
             base.SetCache(keyid + "-row-", Value);
         }
 
-        // 这里存的应该是数据行
+        public object GetStudentMaps(string id)
+        {
+            return this.GetCache("stumaps" + id);
+        }
+
+        public void SetStudentMaps(string id, string[] values)
+        {
+            this.SetCache("stumaps" + id, values);
+        }
+
         public object GetStudent(string keyid)
         {
             // todo: 学生信息缓存的存取规则
             return this.GetCache("stu" + keyid);
         }
 
-        public void SetStudent(string keyid, InteSchDataSet.studentsRow value)
+        public void SetStudent(string keyid, string value)
         {
             this.SetCache("stu" + keyid, value);
         }
+
+        //// 这里存的应该是数据行
+        //public object GetStudent(string keyid)
+        //{
+        //    // todo: 学生信息缓存的存取规则
+        //    return this.GetCache("stu" + keyid);
+        //}
+
+        //public void SetStudent(string keyid, InteSchDataSet.studentsRow value)
+        //{
+        //    this.SetCache("stu" + keyid, value);
+        //}
 
         public object GetMap(string key)
         {
             return this.GetCache("map" + key);
         }
 
-        public void SetMap(string keyid, InteSchDataSet.mapsRow value)
+        public void SetMap(string keyid, string value)
         {
             this.SetCache("map" + keyid, value);
         }

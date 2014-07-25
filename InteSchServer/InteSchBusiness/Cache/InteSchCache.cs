@@ -42,6 +42,7 @@ namespace InteSchBusiness.Cache
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex);
                 return;
             }
             mc = new MemcachedClient();//初始化一个客户端  
@@ -57,10 +58,16 @@ namespace InteSchBusiness.Cache
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex);
                 return;
             }
             mc = new MemcachedClient();//初始化一个客户端  
             mc.EnableCompression = true; //是否启用压缩数据
+        }
+
+        public void Flush()
+        {
+            mc.FlushAll();
         }
 
         protected object GetCache(string key)
